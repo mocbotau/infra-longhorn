@@ -10,6 +10,14 @@ helmDefaults:
   waitForJobs: true
 
 releases:
+  - name: longhorn-prereqs
+    chart: ./charts/prereqs
+    namespace: longhorn-system
+    values:
+      - s3:
+          accessKeyId: {{ requiredEnv "S3_ACCESS_KEY_ID" | quote }}
+          secretAccessKey: {{ requiredEnv "S3_SECRET_ACCESS_KEY" | quote }}
+        
   - name: longhorn-system
     chart: longhorn/longhorn
     version: 1.10.1

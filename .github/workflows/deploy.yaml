@@ -1,9 +1,19 @@
-name: Provision Longhorn
-
+name: Deploy Longhorn
 on:
+  push:
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
   deploy:
-    uses: mocbotau/infra-workflows/.github/workflows/generic-infra-deploy.yaml@v0.5.0
-    secrets: inherit
+    name: Deploy Longhorn
+    runs-on: ubuntu-dagger
+    steps:
+      - name: Checkout configuration
+        uses: actions/checkout@v6
+
+      - name: Deploy Longhorn
+        env:
+          S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+          S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+        run: helmfile apply --suppress-secrets
